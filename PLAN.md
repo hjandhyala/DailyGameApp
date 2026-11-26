@@ -18,6 +18,17 @@ Personal data lives in the browser (like the games themselves). An anonymous syn
 | Add by URL | Added to your favorites; "Share to marketplace" checkbox on by default |
 | Look | Clean, playful cards, light/dark, mobile-first |
 
+### Changes at approval
+- `/admin` is protected by **GitHub sign-in (Auth.js)**, limited to the usernames in `ADMIN_GITHUB_LOGINS`. It replaces the token-in-URL idea.
+- New **usage dashboard** at `/admin`:
+  - total users (anonymous devices) over time
+  - daily, weekly and monthly active users, and new users
+  - games played per day
+  - most-played and most-favorited games
+  - mobile/desktop split
+  - sync and catalog counts
+- The data comes from anonymous `visit`/`play` pings (`/api/events`), stored as salted device hashes.
+
 ## 2. Tech stack
 
 - **Next.js 15** (App Router, Route Handlers for API), TypeScript, React Server Components for catalog pages
@@ -78,7 +89,8 @@ No accounts. Identity takes two forms:
 | `POST /api/games/[id]/favorite { on }` | Anonymous favorite counter for "Popular" (deduped per device hash) |
 | `POST /api/sync { since, changes[] }` | Header `X-Sync-Key`. Applies changes with last-write-wins on `updated_at` and returns all records with `server_seq > since` plus a new cursor |
 | `DELETE /api/sync` | Deletes the sync space ("unlink everywhere") |
-| `GET /admin?token=…` (optional, env `ADMIN_TOKEN`) | Small page to unhide or remove reported games. Not required for normal use |
+| `POST /api/events { type: visit\|play }` | Anonymous usage pings behind the admin dashboard |
+| `/admin`, `/admin/games` (GitHub sign-in) | Usage dashboard and moderation: restore, hide, remove or edit games |
 
 **Safety for `/api/preview` (SSRF):**
 - Allow only http/https on ports 80/443.
