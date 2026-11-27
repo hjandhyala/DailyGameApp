@@ -105,18 +105,18 @@ Secrets go straight from the command that generates them into `vercel env add`, 
    | `ADMIN_GITHUB_LOGINS` | `hjandhyala` | (none) |
 
 6. [x] 🤖 Deploy with `npx vercel --prod`. `vercel-build` migrates and seeds Turso. Production URL: https://daily-games-hub-eta.vercel.app
-7. [ ] Custom domain `dailygamesportal.com` (registered at Wix):
+7. [x] Custom domain `dailygamesportal.com` (registered at Wix):
    - [x] 🤖 Add `dailygamesportal.com` and `www.dailygamesportal.com` to the Vercel project, with `www` 308-redirecting to the apex.
-   - [ ] 🧑 In Wix → Domains → Manage DNS records, set:
+   - [x] 🧑 In Wix → Domains → Manage DNS records, set:
      - `A` for `@`: replace Wix's records with `216.198.79.1` and `64.29.17.1`
      - `CNAME` for `www`: `35f2bcbbbe702c90.vercel-dns-017.com`
-   - [ ] 🤖 Confirm the domain verifies in Vercel and serves HTTPS.
-8. [ ] 🧑 Create a GitHub OAuth app at github.com/settings/applications/new:
+   - [x] 🤖 Confirm the domain verifies in Vercel and serves HTTPS.
+8. [x] 🧑 Create a GitHub OAuth app at github.com/settings/applications/new:
    - Homepage: `https://dailygamesportal.com`
    - Callback: `https://dailygamesportal.com/api/auth/callback/github`
    - Generate a client secret.
-9. [ ] 🧑 Run `! npx vercel env add AUTH_GITHUB_ID production` and `! npx vercel env add AUTH_GITHUB_SECRET production`.
-10. [ ] 🤖 Redeploy with `npx vercel --prod`.
+9. [x] 🧑 Run `! npx vercel env add AUTH_GITHUB_ID production` and `! npx vercel env add AUTH_GITHUB_SECRET production`.
+10. [x] 🤖 Redeploy with `npx vercel --prod`.
 
 ## Phase 5: Verify production
 
