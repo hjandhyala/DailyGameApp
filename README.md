@@ -3,7 +3,7 @@
 A no-login marketplace and tracker for daily web games: Krillion, Daily Tens, Wordle, Connections, Worldle and more.
 
 - **Today:** your favorite games as a checklist, with a progress ring, a daily streak, one-tap **Play** (opens a new tab), and a *"Did you finish?"* sheet when you come back.
-- **Paste your results:** paste a game's share text and the app saves your score. Parsers cover Wordle, Connections, Strands, the Mini, Spelling Bee, Quordle, Octordle, Framed, Globle, Waffle, Contexto, Pinpoint, Queens/Tango/Zip, Worldle, Tradle, Nerdle, Mathler, Bandle, Costcodle, Flagle and Phrazle. Krillion and Daily Tens have best-effort parsers, and any other game gets a general one that reads `N/M` scores, times or guess counts.
+- **Paste your results:** paste a game's share text and the app saves your score. Parsers cover Wordle, Connections, Strands, the Mini, Spelling Bee, Quordle, Octordle, Framed, Globle, Waffle, Contexto, Pinpoint, Queens/Tango/Zip, Worldle, Tradle, Nerdle, Mathler, Bandle, Costcodle, Flagle and Phrazle. Krillion and Daily Tens parsers read each game's own share format, and any other game gets a general one that reads `N/M` scores, times or guess counts.
 - **Explore (the marketplace):** 40 starter games plus any the community adds. Search, filter by category, sort by Popular, New or A–Z, and star games to add them to your favorites.
 - **Add by link:** paste any URL and the app fetches the game's name and icon. *Share to marketplace* is on by default; turn it off to keep the game private. `/add?url=…` works as a bookmarklet or Android share target.
 - **Stats:** calendar heatmap, daily and perfect-day streaks, and per-game streak, best, win rate, average score or best time.
@@ -26,8 +26,10 @@ A no-login marketplace and tracker for daily web games: Krillion, Daily Tens, Wo
 
 ## Run locally
 
+Use Node 24 (pinned in `.nvmrc` and `package.json` `engines`).
+
 ```bash
-npm install
+npm ci
 cp .env.example .env.local     # optional for local dev
 npm run db:setup               # creates ./local.db, runs migrations, seeds 40 games
 npm run dev                    # http://localhost:3000
@@ -35,11 +37,11 @@ npm run dev                    # http://localhost:3000
 
 To preview `/admin` locally without creating a GitHub OAuth app, start the dev server with `ADMIN_DEV_BYPASS=1 npm run dev`. The bypass is ignored when `NODE_ENV=production`.
 
-Useful scripts: `npm test`, `npm run lint`, `npm run typecheck`, `npm run db:generate` (after changing `src/lib/server/schema.ts`), `npm run db:migrate`, `npm run db:seed` (safe to re-run; updates seed games by slug).
+Useful scripts: `npm test`, `npm run lint`, `npm run typecheck`, `npm run db:generate` (after changing `src/lib/server/schema.ts`), `npm run db:migrate`, `npm run db:seed` (safe to re-run; inserts missing seed games and leaves existing rows, including admin edits, alone). To push changes from `src/lib/server/seed-games.ts` to games that already exist, run `npm run db:seed -- --update`. The `db:*` scripts read `.env.local` like Next does.
 
 ## Deploy to Vercel
 
-1. **Database:** create a Turso database (`turso db create dailygames`), then get its URL (`turso db show dailygames --url`) and a token (`turso db tokens create dailygames`).
+1. **Database:** create a Turso database (`turso db create dailygames`), then get its URL (`turso db show dailygames --url`) and a token (`turso db tokens create dailygames`). Give Preview deployments their own database (for example `dailygames-preview`), because every build runs migrations.
 2. **GitHub OAuth app:** GitHub → Settings → Developer settings → OAuth Apps → *New*.
    - Homepage URL: `https://your-domain`
    - Authorization callback URL: `https://your-domain/api/auth/callback/github`
@@ -55,7 +57,7 @@ Useful scripts: `npm test`, `npm run lint`, `npm run typecheck`, `npm run db:gen
    | `ADMIN_GITHUB_LOGINS` | comma-separated GitHub usernames allowed into `/admin` |
    | `BLOCKED_HOSTS` *(optional)* | extra hosts that can't be shared to the marketplace |
 
-4. **Deploy.** The `vercel-build` script runs migrations and the (idempotent) seed before `next build`.
+4. **Deploy.** The `vercel-build` script runs migrations and the seed before `next build`. The seed only inserts missing games, so admin edits survive deploys. A build on Vercel without `TURSO_DATABASE_URL` fails immediately instead of falling back to a local file.
 
 ## How it works
 
@@ -113,6 +115,6 @@ tests/                  Vitest
 ```
 
 ## Known limitations
-- I couldn't confirm the official URL or share format for **Daily Tens**, and the build environment couldn't reach either site. The seed uses `dailytens.com`; an admin can correct it under Moderation → All games → Edit. Both the Krillion and Daily Tens parsers are pattern-based (points/meters and `N/10`).
+- The Krillion and Daily Tens parsers were checked against the share text each site generates (Nov 2026). The other parsers follow each game's known share format but haven't all been re-checked against current share text.
 - The DNS check in the link preview runs before the fetch. A DNS-rebinding attack between the check and the fetch is still possible. It's an acceptable risk here because the server never returns the response body.
 - Analytics count *browsers*, not people: one person on two browsers counts twice, and so does a cleared cache.
