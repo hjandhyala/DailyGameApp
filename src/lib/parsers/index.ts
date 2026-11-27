@@ -249,10 +249,17 @@ export const PARSERS: Parser[] = [
   timedGame("tango", /\bTango/),
   timedGame("zip", /\bZip/),
   {
-    // Best-effort: Krillion scores answers by rarity (points) and depth (meters).
+    // "Krillion #45 🦐 320  🫧🐟🦑⬛🏮🌟🐟" — 7 rounds, max 700, one tier emoji per round (⬛ = miss).
+    // Archive and unlimited shares put a mark before the number: "Krillion ⟲ #45", "Krillion ∞ #45".
     slug: "krillion",
     detect: /krillion/i,
     parse(text) {
+      const share = text.match(/\bKrillion\s+(?:\S+\s+)?#(\d+)\s*🦐\s*([\d,]+)\s*((?:[🫧🤡🐟🦑🏮🌟⬛]️?)+)?/u);
+      if (share) {
+        const score = num(share[2]);
+        return { label: `${score} pts`, score, max: 700, puzzle: share[1], grid: share[3] };
+      }
+      // Looser fallback for hand-written results.
       const pts = text.match(/([\d,]+)\s*(?:pts|points)\b/i);
       const depth = text.match(/([\d,]+)\s*(?:m|meters|metres)\b/i);
       if (!pts && !depth) return null;
@@ -261,13 +268,20 @@ export const PARSERS: Parser[] = [
     },
   },
   {
-    // Best-effort: Daily Tens — name the top ten.
+    // "DailyTens #123" over a 5×2 grid: 🏆 = found, ❌ = missed.
     slug: "daily-tens",
     detect: /daily\s*tens/i,
     parse(text) {
+      const puzzle = text.match(/daily\s*tens\s*#\s*(\d+)/i)?.[1];
+      const grid = extractGrid(text);
+      if (grid && /🏆|❌/u.test(grid)) {
+        const score = [...grid].filter((c) => c === "🏆").length;
+        return { label: `${score}/10`, score, max: 10, puzzle, grid };
+      }
+      // Looser fallback for hand-written results.
       const m = text.match(/\b(\d{1,2})\s*\/\s*10\b/);
       if (!m) return null;
-      return { label: `${m[1]}/10`, score: Number(m[1]), max: 10, grid: extractGrid(text) };
+      return { label: `${m[1]}/10`, score: Number(m[1]), max: 10, puzzle, grid };
     },
   },
   slashGame("worldle", /#Worldle/i, 6),

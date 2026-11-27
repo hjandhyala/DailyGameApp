@@ -34,8 +34,8 @@ export default async function AdminDashboard() {
       <UsageCharts series={u.series} />
 
       <section className="grid gap-4 md:grid-cols-3">
-        <BarList title="Most played (7 days)" rows={u.topPlayed.map((g) => ({ label: g.name, value: g.plays }))} empty="No plays recorded yet." />
-        <BarList title="Most favorited" rows={u.topFavorited.filter((g) => g.n > 0).map((g) => ({ label: g.name, value: g.n }))} empty="No favorites yet." />
+        <BarList title="Most played (7 days)" rows={u.topPlayed.map((g) => ({ id: g.id, label: g.name, value: g.plays }))} empty="No plays recorded yet." />
+        <BarList title="Most favorited" rows={u.topFavorited.filter((g) => g.n > 0).map((g) => ({ id: g.id, label: g.name, value: g.n }))} empty="No favorites yet." />
         <div className="card p-5">
           <h2 className="mb-3 font-black">Devices</h2>
           {u.platforms.length === 0 ? (
@@ -75,7 +75,7 @@ function Kpi({ label, value, sub, hero, warn }: { label: string; value: number; 
   );
 }
 
-function BarList({ title, rows, empty }: { title: string; rows: { label: string; value: number }[]; empty: string }) {
+function BarList({ title, rows, empty }: { title: string; rows: { id: string; label: string; value: number }[]; empty: string }) {
   const max = Math.max(1, ...rows.map((r) => r.value));
   return (
     <div className="card p-5">
@@ -85,7 +85,7 @@ function BarList({ title, rows, empty }: { title: string; rows: { label: string;
       ) : (
         <ul className="space-y-2.5">
           {rows.map((r) => (
-            <li key={r.label}>
+            <li key={r.id}>
               <div className="mb-1 flex justify-between gap-2 text-sm">
                 <span className="truncate font-bold">{r.label}</span>
                 <span className="font-black tabular-nums">{r.value.toLocaleString("en-US")}</span>

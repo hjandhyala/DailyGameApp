@@ -30,7 +30,7 @@ export const SEED_GAMES: SeedGame[] = [
   { slug: "the-mini", name: "The Mini Crossword", url: "https://www.nytimes.com/crosswords/game/mini", category: "word", description: "A bite-sized daily crossword.", tags: ["nyt", "crossword"] },
   { slug: "letter-boxed", name: "Letter Boxed", url: "https://www.nytimes.com/puzzles/letter-boxed", category: "word", description: "Connect letters around a square to use them all.", tags: ["nyt"] },
   { slug: "quordle", name: "Quordle", url: "https://www.merriam-webster.com/games/quordle/", category: "word", description: "Solve four Wordles at once in nine guesses." },
-  { slug: "octordle", name: "Octordle", url: "https://octordle.com", category: "word", description: "Eight words, thirteen guesses." },
+  { slug: "octordle", name: "Octordle", url: "https://www.merriam-webster.com/games/octordle/", category: "word", description: "Eight words, thirteen guesses." },
   { slug: "waffle", name: "Waffle", url: "https://wafflegame.net/daily", category: "word", description: "Swap letters to fix the waffle-shaped word grid." },
   { slug: "contexto", name: "Contexto", url: "https://contexto.me", category: "word", description: "Find the secret word by semantic closeness." },
   { slug: "semantle", name: "Semantle", url: "https://semantle.com", category: "word", description: "Guess the word using similarity scores." },

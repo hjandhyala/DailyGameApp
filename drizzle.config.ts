@@ -1,6 +1,7 @@
+import "./scripts/env";
 import { defineConfig } from "drizzle-kit";
 
-const url = process.env.TURSO_DATABASE_URL ?? "file:local.db";
+const url = process.env.TURSO_DATABASE_URL || "file:local.db";
 
 export default defineConfig({
   schema: "./src/lib/server/schema.ts",

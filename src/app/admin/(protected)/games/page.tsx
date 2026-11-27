@@ -17,10 +17,17 @@ const TABS = [
   { id: "removed", label: "Removed" },
 ] as const;
 
+const EDIT_ERRORS: Record<string, string> = {
+  duplicate_url: "Another game already uses that link. It's listed below.",
+  invalid_url: "That doesn't look like a valid game link.",
+  not_found: "That game no longer exists.",
+};
+
 export default async function ModerationPage({ searchParams }: PageProps<"/admin/games">) {
   const sp = await searchParams;
   const tab = (typeof sp.tab === "string" ? sp.tab : "reported") as (typeof TABS)[number]["id"];
   const q = typeof sp.q === "string" ? sp.q.trim() : "";
+  const error = typeof sp.error === "string" ? EDIT_ERRORS[sp.error] : undefined;
 
   const where: SQL[] = [];
   if (tab === "reported") where.push(or(eq(games.status, "hidden"), sql`${games.reportCount} > 0`)!);
@@ -57,6 +64,11 @@ export default async function ModerationPage({ searchParams }: PageProps<"/admin
         <h1 className="text-3xl font-black">Moderation</h1>
         <p className="text-sm text-ink-2">Community games publish instantly. A game is hidden automatically after 3 reports from different devices.</p>
       </div>
+      {error && (
+        <p role="alert" className="rounded-xl bg-danger/10 px-3 py-2 text-sm font-bold text-danger">
+          {error}
+        </p>
+      )}
       <div className="flex flex-wrap items-center gap-2">
         {TABS.map((t) => (
           <Link key={t.id} href={`/admin/games?tab=${t.id}${q ? `&q=${encodeURIComponent(q)}` : ""}`} className="chip" aria-pressed={tab === t.id}>
