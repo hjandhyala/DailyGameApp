@@ -1,3 +1,5 @@
+import { Check } from "lucide-react";
+
 export function ProgressRing({ done, total, size = 92 }: { done: number; total: number; size?: number }) {
   const stroke = 10;
   const r = (size - stroke) / 2;
@@ -23,7 +25,7 @@ export function ProgressRing({ done, total, size = 92 }: { done: number; total: 
       </svg>
       <div className="absolute inset-0 grid place-items-center text-center leading-none">
         <div>
-          <div className="text-2xl font-black">{complete ? "🎉" : `${done}/${total}`}</div>
+          <div className="text-2xl font-black">{complete ? <Check size={size * 0.36} strokeWidth={3} className="text-good" aria-hidden /> : `${done}/${total}`}</div>
           {!complete && <div className="mt-0.5 text-[10px] font-bold uppercase text-ink-2">done</div>}
         </div>
       </div>

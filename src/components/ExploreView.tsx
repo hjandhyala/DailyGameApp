@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useFavoriteRefs } from "@/lib/client/hooks";
 import { CATEGORIES } from "@/lib/shared/categories";
 import type { CatalogGame } from "@/lib/shared/types";
+import { CategoryIcon } from "./CategoryChip";
 import { GameCard } from "./GameCard";
 
 type Sort = "popular" | "new" | "az";
@@ -67,7 +68,7 @@ export function ExploreView({ games }: { games: CatalogGame[] }) {
         </button>
         {CATEGORIES.map((c) => (
           <button key={c.id} className="chip" aria-pressed={cat === c.id} onClick={() => setCat(cat === c.id ? null : c.id)}>
-            <span aria-hidden>{c.emoji}</span> {c.label}
+            <CategoryIcon id={c.id} /> {c.label}
           </button>
         ))}
       </div>

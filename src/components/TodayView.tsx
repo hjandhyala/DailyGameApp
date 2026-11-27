@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useLiveQuery } from "dexie-react-hooks";
-import { ArrowDown, ArrowUp, Check, ClipboardPaste, ExternalLink, Flame, PencilLine, Plus, Star, Trash2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowDown, ArrowUp, Check, ClipboardPaste, ExternalLink, Flame, Gamepad2, PencilLine, Plus, Star, Trash2 } from "lucide-react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { db } from "@/lib/client/db";
 import { useFavorites, usePlays, useSettings, useToday } from "@/lib/client/hooks";
 import { markPlayed, reorderFavorites, setFavorite, unmarkPlayed, viewOfCatalog, type GameView } from "@/lib/client/store";
@@ -11,6 +11,7 @@ import { computeStreak } from "@/lib/shared/streaks";
 import { GameIcon } from "./GameIcon";
 import { ProgressRing } from "./ProgressRing";
 import { ResultSheet } from "./ResultSheet";
+import { WelcomeTour } from "./WelcomeTour";
 
 const PENDING_KEY = "dgh.pendingPlay";
 
@@ -70,13 +71,13 @@ export function TodayView() {
     try {
       text = await navigator.clipboard.readText();
     } catch {
-      setNotice("Clipboard access was blocked. Tap a game's ✎ button and paste there instead.");
+      setNotice("Clipboard access was blocked. Tap the pencil button on a game and paste there instead.");
       return;
     }
     const slug = detectGame(text);
     const game = slug ? favs.find((f) => f.slug === slug) : undefined;
     if (game) setSheet({ game, text });
-    else setNotice(slug ? `That looks like a ${slug} result, but it isn't in your favorites.` : "Couldn't tell which game that result is from — use the ✎ button on the game instead.");
+    else setNotice(slug ? `That looks like a ${slug} result, but it isn't in your favorites.` : "Couldn't tell which game that result is from — use the pencil button on the game instead.");
   }
 
   function move(i: number, dir: -1 | 1) {
@@ -98,7 +99,7 @@ export function TodayView() {
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold text-ink-2">{dateLabel}</p>
           <h1 className="text-2xl font-black leading-tight sm:text-3xl">
-            {favs.length && done === favs.length ? "All done today! 🎉" : greeting()}
+            {favs.length && done === favs.length ? "All done today!" : greeting()}
           </h1>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
             <span className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2.5 py-1 font-bold" title="Days in a row you've played at least one favorite">
@@ -208,6 +209,9 @@ export function TodayView() {
       )}
 
       <ResultSheet open={!!sheet} game={sheet?.game ?? null} initialText={sheet?.text} onClose={() => setSheet(null)} />
+      <Suspense>
+        <WelcomeTour hasGames={favs.length > 0} />
+      </Suspense>
     </div>
   );
 }
@@ -222,7 +226,9 @@ function EmptyToday() {
   }, [popular]);
   return (
     <section className="card p-6 text-center">
-      <div className="text-5xl">🎮</div>
+      <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-accent-soft text-accent">
+        <Gamepad2 size={28} aria-hidden />
+      </div>
       <h2 className="mt-2 text-xl font-black">Build your daily lineup</h2>
       <p className="mx-auto mt-1 max-w-md text-ink-2">Star the games you play every day. They show up here with a checklist, streaks and your scores.</p>
       {featured.length > 0 && (

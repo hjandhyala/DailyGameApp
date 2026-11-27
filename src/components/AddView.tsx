@@ -1,13 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Check, Globe2, Link2, Loader2, Lock, Star } from "lucide-react";
+import { Check, Globe2, Link2, Loader2, Lock, Plus, Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { api, ApiError } from "@/lib/client/device";
 import { useFavoriteRefs } from "@/lib/client/hooks";
 import { addCustomGame, cacheCatalogGame, setFavorite } from "@/lib/client/store";
 import { CATEGORIES } from "@/lib/shared/categories";
 import type { CatalogGame, LinkPreview } from "@/lib/shared/types";
+import { CategoryIcon } from "./CategoryChip";
 import { GameIcon } from "./GameIcon";
 
 function guessCategory(text: string) {
@@ -177,7 +178,7 @@ export function AddView() {
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map((c) => (
                 <button type="button" key={c.id} className="chip" aria-pressed={cat === c.id} onClick={() => setCat(c.id)}>
-                  {c.emoji} {c.label}
+                  <CategoryIcon id={c.id} /> {c.label}
                 </button>
               ))}
             </div>
@@ -221,7 +222,7 @@ function BookmarkletLink() {
   }, []);
   return (
     <a ref={ref} className="btn btn-soft !py-1 text-xs" onClick={(e) => e.preventDefault()}>
-      ➕ Add to DailyGames
+      <Plus size={14} /> Add to DailyGames
     </a>
   );
 }

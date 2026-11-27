@@ -126,7 +126,15 @@ export function StatsView() {
                           <span className="truncate">{g.name}</span>
                         </Link>
                       </td>
-                      <td className="px-2 py-2 text-right font-black">{s.current ? `🔥 ${s.current}` : "0"}</td>
+                      <td className="px-2 py-2 text-right font-black">
+                        {s.current ? (
+                          <span className="inline-flex items-center gap-1">
+                            <Flame size={14} className="text-orange-500" aria-hidden /> {s.current}
+                          </span>
+                        ) : (
+                          "0"
+                        )}
+                      </td>
                       <td className="px-2 py-2 text-right">{s.best}</td>
                       <td className="px-2 py-2 text-right">{s.plays}</td>
                       <td className="px-2 py-2 text-right">{s.winRate !== null ? `${Math.round(s.winRate * 100)}%` : (s.bestTime ?? s.avgScore ?? "—")}</td>

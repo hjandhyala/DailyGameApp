@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import QRCode from "qrcode";
 import { Copy, Download, Eye, EyeOff, Link2, RefreshCw, Upload } from "lucide-react";
@@ -69,7 +70,7 @@ function SyncSection() {
           {status.state === "syncing"
             ? "Syncing…"
             : status.state === "error"
-              ? `⚠ ${status.error}`
+              ? `Sync error: ${status.error}`
               : status.lastSyncAt
                 ? `Synced ${new Date(status.lastSyncAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
                 : status.state === "off"
@@ -199,6 +200,9 @@ function Preferences() {
         <input type="checkbox" className="size-5 accent-[var(--accent)]" checked={settings.promptAfterPlay} onChange={(e) => setSetting("promptAfterPlay", e.target.checked)} />
         <span className="text-sm font-bold">Ask “Did you finish?” when I come back from a game</span>
       </label>
+      <Link href="/?tour=1" className="btn btn-soft">
+        Show the welcome tour
+      </Link>
     </section>
   );
 }

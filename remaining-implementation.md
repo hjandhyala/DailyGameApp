@@ -120,7 +120,7 @@ Secrets go straight from the command that generates them into `vercel env add`, 
 
 ## Phase 5: Verify production
 
-- [ ] 🤖 Pages and APIs:
+- [x] 🤖 Pages and APIs:
   - `/api/games` returns 40 games.
   - `/`, `/explore` and `/g/krillion` return 200.
   - `/manifest.webmanifest` is served.
@@ -132,7 +132,16 @@ Secrets go straight from the command that generates them into `vercel env add`, 
   1. Add the site to your home screen.
   2. Star a game.
   3. Link the sync code from your laptop; data shows up on both devices.
-- [ ] 🤖 CI passes on Node 24.
+- [x] 🤖 CI passes on Node 24.
+
+## Phase 6: First-visit welcome tour 🤖
+
+- [x] A three-step tour (`src/components/WelcomeTour.tsx`) opens on Today for first-time visitors with an empty list:
+  1. pick your daily games (star in Explore, or add by link)
+  2. play, then paste the share text so the score is tracked
+  3. keep your streak going (Today, Stats, sync in Settings)
+- [x] It shows once per browser (`dgh.tourSeen` in localStorage), ends with an **Explore games** button, and can be replayed from **Settings → Show the welcome tour** (`/?tour=1`).
+- [ ] 🤖 Deploy and check it on dailygamesportal.com.
 
 ## Later (not needed to get it running)
 

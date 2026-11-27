@@ -83,7 +83,7 @@ export default async function ModerationPage({ searchParams }: PageProps<"/admin
       </div>
 
       {rows.length === 0 ? (
-        <div className="card p-8 text-center text-ink-2">{tab === "reported" ? "Nothing to review. 🎉" : "No games found."}</div>
+        <div className="card p-8 text-center text-ink-2">{tab === "reported" ? "Nothing to review." : "No games found."}</div>
       ) : (
         <ul className="space-y-3">
           {rows.map((g) => {
@@ -97,7 +97,7 @@ export default async function ModerationPage({ searchParams }: PageProps<"/admin
                       <span className="font-black">{g.name}</span>
                       <StatusPill status={g.status} />
                       <span className="text-xs text-ink-2">
-                        {g.source} · {category(g.category).label} · ★ {g.favoriteCount} · added {new Date(g.createdAt).toLocaleDateString()}
+                        {g.source} · {category(g.category).label} · {g.favoriteCount} favorites · added {new Date(g.createdAt).toLocaleDateString()}
                       </span>
                     </div>
                     <a href={g.url} target="_blank" rel="noopener noreferrer" className="block truncate text-sm text-accent hover:underline">
@@ -176,5 +176,5 @@ function StatusPill({ status }: { status: string }) {
     hidden: "bg-warn/15 text-warn",
     removed: "bg-danger/10 text-danger",
   };
-  return <span className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${map[status]}`}>{status === "hidden" ? "⚠ hidden" : status}</span>;
+  return <span className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold uppercase ${map[status]}`}>{status}</span>;
 }

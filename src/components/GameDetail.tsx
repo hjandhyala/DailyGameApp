@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLiveQuery } from "dexie-react-hooks";
-import { ExternalLink, Flag, Flame, PencilLine, Star, Trash2, Trophy } from "lucide-react";
+import { Check, ExternalLink, Flag, Flame, Lock, PencilLine, Star, Trash2, Trophy } from "lucide-react";
 import { useMemo, useState } from "react";
 import { db } from "@/lib/client/db";
 import { api } from "@/lib/client/device";
@@ -55,8 +55,16 @@ export function GameDetail({ game: catalogGame }: { game: CatalogGame | null }) 
             <p className="truncate text-sm text-ink-2">{game.host}</p>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <CategoryTag id={game.category} />
-              {game.isCustom && <span className="text-xs font-bold text-ink-2">🔒 Private</span>}
-              {!game.isCustom && <span className="text-xs font-bold text-ink-2">★ {game.favoriteCount ?? 0} players</span>}
+              {game.isCustom && (
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-ink-2">
+                  <Lock size={12} strokeWidth={2.5} aria-hidden /> Private
+                </span>
+              )}
+              {!game.isCustom && (
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-ink-2">
+                  <Star size={12} strokeWidth={2.5} aria-hidden /> {game.favoriteCount ?? 0} players
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -111,7 +119,11 @@ export function GameDetail({ game: catalogGame }: { game: CatalogGame | null }) 
                 <span className="w-28 shrink-0 font-bold text-ink-2">
                   {new Date(`${p.day}T12:00:00`).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })}
                 </span>
-                <span className={`font-black ${p.result?.failed ? "text-danger" : ""}`}>{p.result?.label ?? "✓ Played"}</span>
+                <span className={`font-black ${p.result?.failed ? "text-danger" : ""}`}>{p.result?.label ?? (
+                    <span className="inline-flex items-center gap-1">
+                      <Check size={14} strokeWidth={3} aria-hidden /> Played
+                    </span>
+                  )}</span>
                 {p.result?.grid && <span className="ml-auto hidden truncate text-xs sm:block">{p.result.grid.split("\n")[0]}</span>}
               </li>
             ))}

@@ -30,8 +30,8 @@ export function GameCard({ game, isFav }: { game: CatalogGame; isFav: boolean })
       <div className="mt-auto flex items-center gap-2">
         <CategoryTag id={game.category} />
         {game.source === "community" && <span className="text-[11px] font-bold text-ink-2">· community</span>}
-        <span className="ml-auto text-xs font-bold text-ink-2" title="Players who favorited this">
-          ★ {game.favoriteCount}
+        <span className="ml-auto inline-flex items-center gap-1 text-xs font-bold text-ink-2" title="Players who favorited this">
+          <Star size={12} strokeWidth={2.5} aria-hidden /> {game.favoriteCount}
         </span>
       </div>
     </li>
